@@ -11,22 +11,22 @@
         .head { background: #d32f2f; color: white; padding: 20px; text-align: center; }
         .main { padding: 30px; }
         
-        /* Perbaikan Layout Gambar agar Terlihat Besar */
         .grid { display: flex; gap: 40px; flex-wrap: wrap; align-items: flex-start; }
-        .img-box { flex: 1; min-width: 350px; } /* Ukuran minimum box gambar diperbesar */
+        .img-box { flex: 1; min-width: 350px; } 
         .img-box img { 
             width: 100%; 
             height: auto; 
             border-radius: 8px; 
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             border: 1px solid #ddd;
+            background: #eee;
         }
         
         .info-box { flex: 1.5; min-width: 300px; }
-        .info-box h2 { color: #2c3e50; margin-top: 0; }
+        .info-box h2 { color: #2c3e50; margin-top: 0; font-size: 1.8rem; }
         .btn-group { margin-top: 25px; display: flex; gap: 15px; }
         
-        .btn { flex: 1; padding: 15px; border-radius: 8px; text-align: center; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: 0.3s; }
+        .btn { flex: 1; padding: 15px; border-radius: 8px; text-align: center; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: 0.3s; font-size: 1rem; }
         .btn-blue { background: #1a73e8; color: white; }
         .btn-blue:hover { background: #1557b0; }
         .btn-green { background: #34a853; color: white; }
@@ -34,51 +34,63 @@
 
         /* Viewer PDF */
         #pdf-viewer { width: 100%; height: 800px; margin-top: 30px; border: 2px solid #ddd; display: none; border-radius: 8px; }
+        
+        @media (max-width: 600px) {
+            .img-box { min-width: 100%; }
+            .btn-group { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
     <div class="wrapper">
         <div class="head"><h1 id="jdl">Memuat Judul...</h1></div>
         <div class="main">
-            <a href="index.html" style="color:#d32f2f; text-decoration:none; font-weight:600;">← Kembali ke Katalog</a>
-            <div class="grid" style="margin-top:30px;">
-                <div class="img-box"><img id="gbr" src="" alt="Cover Modul"></div>
+            <a href="index.html" style="color:#d32f2f; text-decoration:none; font-weight:600; display: inline-block; margin-bottom: 20px;">← Kembali ke Katalog</a>
+            
+            <div class="grid">
+                <div class="img-box">
+                    <img id="gbr" src="" alt="Cover Modul">
+                </div>
                 <div class="info-box">
                     <h2 id="jdl2">Judul Modul</h2>
-                    <p id="dsk" style="line-height:1.6; color:#555;">Memuat deskripsi...</p>
+                    <p id="dsk" style="line-height:1.6; color:#555; white-space: pre-wrap;">Memuat deskripsi...</p>
+                    
                     <div class="btn-group">
                         <button class="btn btn-blue" onclick="showPdf()">📖 Baca Online</button>
-                        <a id="down" href="#" class="btn btn-green" target="_blank">📥 Download PDF</a>
+                        
+                        <a id="down" href="#" class="btn btn-green" target="_blank" rel="noopener noreferrer">📥 Download PDF</a>
                     </div>
                 </div>
             </div>
+
             <iframe id="pdf-viewer" src=""></iframe>
         </div>
     </div>
 
     <script>
-        // MASUKKAN URL WEB APP (EXEC) BAPAK DI SINI
         const API_URL = "https://script.google.com/macros/s/AKfycbwnrFRTd787WIMq9bMBfX8M6jbYWsYmvDSYsGPN-KrEAW47lajpSA12WTK0OYSvTrQK/exec"; 
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id');
 
-        // Fungsi khusus untuk menangani link Google Drive agar bisa dibuka sebagai file langsung
         function fixDriveLink(url, type) {
-            if (url && url.includes('drive.google.com')) {
+            if (!url) return "";
+            if (url.includes('drive.google.com')) {
                 let fileId = "";
-                if (url.includes('id=')) {
-                    fileId = url.split('id=')[1].split('&')[0];
-                } else {
-                    fileId = url.split('/d/')[1].split('/')[0];
+                try {
+                    if (url.includes('id=')) {
+                        fileId = url.split('id=')[1].split('&')[0];
+                    } else {
+                        fileId = url.split('/d/')[1].split('/')[0];
+                    }
+                } catch (e) {
+                    return url;
                 }
                 
                 if (type === 'img') {
                     return `https://drive.google.com/thumbnail?authuser=0&sz=w1000&id=${fileId}`;
                 } else if (type === 'pdf') {
-                    // Link preview untuk iframe (Baca Online)
                     return `https://drive.google.com/file/d/${fileId}/preview`;
                 } else if (type === 'download') {
-                    // Link download langsung
                     return `https://drive.google.com/uc?export=download&id=${fileId}`;
                 }
             }
@@ -87,7 +99,8 @@
 
         async function loadDetail() {
             try {
-                const res = await fetch(API_URL);
+                // Tambahkan cache breaker agar data selalu terbaru
+                const res = await fetch(API_URL + "?t=" + new Date().getTime());
                 const data = await res.json();
                 const item = data.find(x => x.id === id);
 
@@ -97,17 +110,20 @@
                     document.getElementById('jdl2').innerText = item.judul;
                     document.getElementById('dsk').innerText = item.deskripsi || "Tidak ada deskripsi.";
                     
-                    // Set Gambar Besar
+                    // Set Gambar
                     document.getElementById('gbr').src = fixDriveLink(item.gambar, 'img');
                     
-                    // Set Link Download
+                    // Set Link Download (Tanpa trigger otomatis)
                     document.getElementById('down').href = fixDriveLink(item.filepdf, 'download');
                     
-                    // Set Source Iframe untuk Baca Online
+                    // Set Link Iframe (Hanya disiapkan)
                     document.getElementById('pdf-viewer').src = fixDriveLink(item.filepdf, 'pdf');
+                } else {
+                    document.getElementById('main').innerHTML = "<h2>Modul tidak ditemukan.</h2>";
                 }
             } catch (e) {
                 console.error("Gagal memuat detail:", e);
+                document.getElementById('jdl').innerText = "Kesalahan Memuat Data";
             }
         }
 
