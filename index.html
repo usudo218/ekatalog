@@ -3,138 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Katalog Informatika</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>E-Katalog Informatika | Pak Cokro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #d32f2f; --bg: #f8f9fa; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding: 0; }
+        :root { --primary: #d32f2f; --dark: #1a1a1a; --gray: #f4f4f4; }
+        body { font-family: 'Inter', sans-serif; background: var(--gray); margin: 0; color: var(--dark); }
         
-        /* Header */
-        nav { background: white; padding: 15px 5%; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
-        .logo { font-weight: 700; color: var(--primary); font-size: 1.2rem; text-transform: uppercase; }
-        
-        .hero { background: var(--primary); color: white; padding: 50px 20px; text-align: center; }
-        .hero h1 { margin: 0; font-size: 2rem; }
-        
-        /* Grid Katalog */
-        .container { 
-            max-width: 1100px; 
-            margin: 30px auto; 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
-            gap: 25px; 
-            padding: 0 20px; 
-        }
+        /* Header Seragam */
+        header { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-weight: 700; color: var(--primary); font-size: 1.2rem; text-decoration: none; }
+        nav a { text-decoration: none; color: var(--dark); font-weight: 600; font-size: 0.9rem; margin-left: 20px; border: 1px solid var(--dark); padding: 8px 15px; border-radius: 5px; transition: 0.3s; }
+        nav a:hover { background: var(--dark); color: white; }
 
-        /* Card Produk */
-        .card { 
-            background: white; 
-            border-radius: 12px; 
-            overflow: hidden; 
-            text-decoration: none; 
-            color: #333; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
-            transition: 0.3s; 
-            display: flex; 
-            flex-direction: column;
-            border: 1px solid #eee;
-        }
-        .card:hover { transform: translateY(-8px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-        
-        .card-img { width: 100%; height: 250px; object-fit: cover; background: #eee; }
-        .card-body { padding: 15px; flex-grow: 1; }
-        .card-body h3 { margin: 0; font-size: 1rem; color: #2c3e50; line-height: 1.4; }
-        
-        .btn-detail {
-            display: block;
-            text-align: center;
-            padding: 10px;
-            background: var(--primary);
-            color: white;
-            font-weight: 600;
-            margin-top: auto;
-            font-size: 0.9rem;
-        }
+        .hero { background: white; padding: 60px 20px; text-align: center; border-bottom: 1px solid #eee; }
+        .hero h1 { margin: 0; font-size: 2.2rem; font-weight: 700; }
+        .hero p { color: #666; margin-top: 10px; }
 
-        #loader { text-align: center; padding: 50px; font-size: 1.1rem; color: #666; }
-        .error-msg { text-align: center; color: red; padding: 20px; }
+        /* Grid Responsif Sesuai Permintaan */
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; display: grid; gap: 20px; }
+        
+        /* HP Portrait: 2 Kolom */
+        @media (max-width: 599px) { .container { grid-template-columns: repeat(2, 1fr); gap: 12px; } .hero h1 { font-size: 1.6rem; } }
+        /* HP Landscape / Tablet Portrait: 3 Kolom */
+        @media (min-width: 600px) and (max-width: 899px) { .container { grid-template-columns: repeat(3, 1fr); } }
+        /* Tablet Landscape / Desktop: 4 Kolom */
+        @media (min-width: 900px) { .container { grid-template-columns: repeat(4, 1fr); } }
+
+        .card { background: white; border-radius: 10px; overflow: hidden; text-decoration: none; color: inherit; transition: 0.3s; border: 1px solid #eee; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .card-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; background: #eee; }
+        .card-body { padding: 12px; text-align: center; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
+        .card-body h3 { font-size: 0.95rem; margin: 0; line-height: 1.4; }
+
+        footer { text-align: center; padding: 40px 20px; color: #888; font-size: 0.85rem; border-top: 1px solid #eee; margin-top: 50px; background: white; }
     </style>
 </head>
 <body>
 
-    <nav><div class="logo">E-KATALOG INFORMATIKA</div></nav>
+    <header>
+        <a href="index.html" class="logo">E-KATALOG</a>
+        <nav><a href="admin.html">ADMIN PANEL</a></nav>
+    </header>
 
     <div class="hero">
-        <h1>Modul Digital</h1>
-        <p>Pusat Referensi Pembelajaran Informatika</p>
+        <h1>Katalog Modul Digital</h1>
+        <p>Informatika Pak Cokro</p>
     </div>
 
-    <div id="loader">Sedang memuat data dari Spreadsheet...</div>
-    <div id="error-container" class="error-msg"></div>
+    <div id="loader" style="text-align:center; padding:50px;">Memuat koleksi...</div>
     <div class="container" id="katalog-container"></div>
 
+    <footer>&copy; 2024 E-Katalog Informatika. All Rights Reserved.</footer>
+
     <script>
-        // 1. GANTI URL INI DENGAN URL WEB APP (EXEC) BAPAK YANG TERBARU
         const API_URL = "https://script.google.com/macros/s/AKfycbwnrFRTd787WIMq9bMBfX8M6jbYWsYmvDSYsGPN-KrEAW47lajpSA12WTK0OYSvTrQK/exec";
 
-        // 2. Fungsi Konversi Link Drive yang Aman
         function fixDriveLink(url) {
-    if (url && url.includes('drive.google.com')) {
-        let id = "";
-        if (url.includes('/d/')) {
-            id = url.split('/d/')[1].split('/')[0];
-        } else if (url.includes('id=')) {
-            id = url.split('id=')[1].split('&')[0];
+            if (url && url.includes('drive.google.com')) {
+                let id = url.includes('id=') ? url.split('id=')[1].split('&')[0] : url.split('/d/')[1].split('/')[0];
+                return `https://drive.google.com/thumbnail?authuser=0&sz=w600&id=${id}`;
+            }
+            return url;
         }
-        // Menggunakan thumbnail link (lebih cepat loadingnya untuk katalog)
-        return `https://lh3.googleusercontent.com/d/${id}`;
-    }
-    return url;
-}
 
         async function loadData() {
-            const container = document.getElementById('katalog-container');
-            const loader = document.getElementById('loader');
-            const errorContainer = document.getElementById('error-container');
-
             try {
-                // Fetch data dengan tambahan timestamp agar anti-cache
-                const response = await fetch(API_URL + "?t=" + new Date().getTime());
+                const res = await fetch(API_URL + "?t=" + new Date().getTime());
+                const data = await res.json();
+                document.getElementById('loader').style.display = 'none';
                 
-                if (!response.ok) throw new Error("Gagal terhubung ke Server Apps Script.");
-                
-                const data = await response.json();
-                
-                loader.style.display = 'none';
-
-                if (!data || data.length === 0) {
-                    errorContainer.innerHTML = "Database kosong atau Apps Script salah baca sheet.";
-                    return;
-                }
-
-                let html = "";
-                data.forEach(item => {
-                    const finalImg = fixDriveLink(item.gambar);
-                    html += `
-                        <div class="card">
-                            <img src="${finalImg}" class="card-img" onerror="this.src='https://via.placeholder.com/300x400?text=Cover+Tidak+Ditemukan'">
-                            <div class="card-body">
-                                <h3>${item.judul || "Tanpa Judul"}</h3>
-                            </div>
-                            <a href="detail.html?id=${item.id}" class="btn-detail">Lihat Detail →</a>
-                        </div>
-                    `;
-                });
-                container.innerHTML = html;
-
-            } catch (err) {
-                loader.style.display = 'none';
-                errorContainer.innerHTML = "Terjadi Kesalahan: " + err.message + "<br><small>Pastikan Deployment diset 'Anyone'</small>";
-                console.error(err);
-            }
+                document.getElementById('katalog-container').innerHTML = data.map(item => `
+                    <a href="detail.html?id=${item.id}" class="card">
+                        <img src="${fixDriveLink(item.gambar)}" class="card-img" onerror="this.src='https://via.placeholder.com/300x400?text=No+Cover'">
+                        <div class="card-body"><h3>${item.judul}</h3></div>
+                    </a>
+                `).join('');
+            } catch (e) { console.error(e); }
         }
-
-        // Jalankan fungsi
         loadData();
     </script>
 </body>
