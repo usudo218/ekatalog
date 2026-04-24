@@ -3,37 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Panel | E-Katalog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; background: #f4f4f4; display: flex; justify-content: center; padding: 40px; }
-        .box { background: white; padding: 30px; border-radius: 10px; width: 100%; max-width: 450px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        input, textarea, button { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ddd; box-sizing: border-box; }
-        button { background: #d32f2f; color: white; font-weight: bold; border: none; cursor: pointer; }
+        :root { --primary: #d32f2f; --dark: #1a1a1a; }
+        body { font-family: 'Inter', sans-serif; background: #f4f4f4; margin: 0; }
+        
+        header { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo { font-weight: 700; color: var(--primary); font-size: 1.2rem; text-decoration: none; }
+        
+        .container { max-width: 500px; margin: 50px auto; padding: 0 20px; }
+        .box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 6px; border: 1px solid #ddd; font-family: inherit; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; border-radius: 6px; border: none; background: var(--primary); color: white; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        button:hover { opacity: 0.9; }
+        
         #panel { display: none; }
+        h2 { margin-top: 0; font-size: 1.4rem; text-align: center; margin-bottom: 25px; }
+        footer { text-align: center; padding: 30px; color: #888; font-size: 0.8rem; }
     </style>
 </head>
 <body>
-    <div id="login" class="box">
-        <h2>Login Admin</h2>
-        <input type="password" id="pass" placeholder="Password Admin">
-        <button onclick="doLogin()">Masuk</button>
+
+    <header>
+        <a href="index.html" class="logo">E-KATALOG ADMIN</a>
+    </header>
+
+    <div class="container">
+        <div id="login" class="box">
+            <h2>Login Admin</h2>
+            <input type="password" id="pass" placeholder="Password Admin">
+            <button onclick="doLogin()">MASUK KE PANEL</button>
+        </div>
+
+        <div id="panel" class="box">
+            <h2>Tambah Modul Baru</h2>
+            <form id="addForm">
+                <input type="text" id="t" placeholder="Judul Modul" required>
+                <textarea id="d" placeholder="Deskripsi Modul" rows="4" required></textarea>
+                <input type="text" id="g" placeholder="Link Gambar Cover (Google Drive)" required>
+                <input type="text" id="f" placeholder="Link File PDF (Google Drive)" required>
+                <button type="submit" id="s">SIMPAN MODUL</button>
+            </form>
+            <button onclick="location.reload()" style="background:#666; margin-top:10px;">KELUAR</button>
+        </div>
     </div>
 
-    <div id="panel" class="box">
-        <h2>Tambah Modul Baru</h2>
-        <form id="addForm">
-            <input type="text" id="t" placeholder="Judul Modul" required>
-            <textarea id="d" placeholder="Deskripsi Singkat" rows="3"></textarea>
-            <input type="text" id="g" placeholder="Link Gambar Drive" required>
-            <input type="text" id="f" placeholder="Link PDF Drive" required>
-            <button type="submit" id="s">Simpan ke Katalog</button>
-        </form>
-        <button onclick="location.reload()" style="background:#666">Keluar</button>
-    </div>
+    <footer>&copy; 2024 Admin Panel E-Katalog.</footer>
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwnrFRTd787WIMq9bMBfX8M6jbYWsYmvDSYsGPN-KrEAW47lajpSA12WTK0OYSvTrQK/exec";
+        
         function doLogin() {
-            if(document.getElementById('pass').value === "admin123") { // Ganti Password Anda
+            if(document.getElementById('pass').value === "admin123") {
                 document.getElementById('login').style.display = 'none';
                 document.getElementById('panel').style.display = 'block';
             } else { alert("Password Salah!"); }
@@ -41,13 +64,25 @@
 
         document.getElementById('addForm').onsubmit = async (e) => {
             e.preventDefault();
-            document.getElementById('s').innerText = "Menyimpan...";
-            const data = { judul: document.getElementById('t').value, deskripsi: document.getElementById('d').value, 
-                           gambar: document.getElementById('g').value, filepdf: document.getElementById('f').value };
+            const btn = document.getElementById('s');
+            btn.innerText = "Sedang Menyimpan...";
+            btn.disabled = true;
+
+            const data = { 
+                judul: document.getElementById('t').value, 
+                deskripsi: document.getElementById('d').value, 
+                gambar: document.getElementById('g').value, 
+                filepdf: document.getElementById('f').value 
+            };
             
-            await fetch(API_URL + "?action=add", { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
-            alert("Data Berhasil Disimpan!");
-            location.reload();
+            try {
+                await fetch(API_URL + "?action=add", { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
+                alert("Modul Berhasil Tersimpan!");
+                document.getElementById('addForm').reset();
+            } catch (err) { alert("Terjadi kesalahan!"); }
+            
+            btn.innerText = "SIMPAN MODUL";
+            btn.disabled = false;
         };
     </script>
 </body>
