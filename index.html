@@ -29,36 +29,57 @@
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwnrFRTd787WIMq9bMBfX8M6jbYWsYmvDSYsGPN-KrEAW47lajpSA12WTK0OYSvTrQK/exec";
+// Fungsi untuk memperbaiki link Google Drive
+function fixDriveLink(url) {
+    if (url && url.includes('drive.google.com')) {
+        let id = "";
+        if (url.includes('id=')) {
+            id = url.split('id=')[1].split('&')[0];
+        } else {
+            id = url.split('/d/')[1].split('/')[0];
+        }
+        return `https://drive.google.com/uc?export=view&id=${id}`;
+    }
+    return url;
+}
 
-        function fixDriveLink(url) {
-            if (url.includes('drive.google.com')) {
-                let id = url.includes('id=') ? url.split('id=')[1].split('&')[0] : url.split('/d/')[1].split('/')[0];
-                return `https://drive.google.com/uc?export=view&id=${id}`;
-            }
-            return url;
+async function loadData() {
+    const container = document.getElementById('katalog-container');
+    const loader = document.getElementById('loader');
+
+    try {
+        console.log("Mencoba mengambil data dari:", API_URL);
+        const res = await fetch(API_URL + "?t=" + new Date().getTime());
+        
+        if (!res.ok) throw new Error("Server Apps Script tidak merespon (HTTP Error)");
+        
+        const data = await res.json();
+        console.log("Data yang diterima:", data);
+
+        loader.style.display = 'none';
+
+        if (!data || data.length === 0) {
+            container.innerHTML = "<p style='color:red;'>Data diterima tapi kosong. Cek nama Sheet di Spreadsheet Bapak!</p>";
+            return;
         }
 
-        async function loadData() {
-            try {
-                const res = await fetch(API_URL);
-                const data = await res.json();
-                document.getElementById('loader').style.display = 'none';
-                const container = document.getElementById('katalog-container');
-                
-                if (data.length === 0) { container.innerHTML = "Data masih kosong."; return; }
+        container.innerHTML = data.map(item => `
+            <a href="detail.html?id=${item.id}" class="card">
+                <img src="${fixDriveLink(item.gambar)}" class="card-img" onerror="this.src='https://via.placeholder.com/300x400?text=Cover+Rusak'">
+                <div class="card-body">
+                    <h3>${item.judul}</h3>
+                    <div style="background:#e8f5e9;color:#2e7d32;padding:3px 8px;border-radius:4px;font-size:12px;display:inline-block;margin-top:10px;">TERSEDIA</div>
+                </div>
+            </a>
+        `).join('');
 
-                container.innerHTML = data.map(item => `
-                    <a href="detail.html?id=${item.id}" class="card">
-                        <img src="${fixDriveLink(item.gambar)}" class="card-img" onerror="this.src='https://via.placeholder.com/300x400?text=Cover+Buku'">
-                        <div class="card-body">
-                            <h3>${item.judul}</h3>
-                            <span class="price-badge">FREE / DOWNLOADABLE</span>
-                        </div>
-                    </a>
-                `).join('');
-            } catch (e) { document.getElementById('loader').innerText = "Gagal memuat data."; }
-        }
-        loadData();
+    } catch (e) {
+        console.error("Detail Error:", e);
+        loader.innerText = "Error: " + e.message + ". Pastikan URL Deploy sudah diset 'Anyone'.";
+    }
+}
+
+loadData();
     </script>
 </body>
 </html>
