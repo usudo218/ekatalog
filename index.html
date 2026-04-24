@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Katalog Informatika</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #d32f2f; --bg: #f8f9fa; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; }
+        .hero { background: var(--primary); color: white; padding: 40px 20px; text-align: center; }
+        .container { max-width: 1000px; margin: 30px auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
+        .card { background: white; border-radius: 12px; overflow: hidden; text-decoration: none; color: #333; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card-info { padding: 15px; }
+        .card-info h3 { margin: 0; font-size: 16px; height: 45px; overflow: hidden; }
+        .price { color: #2e7d32; font-weight: bold; margin-top: 10px; display: block; }
+    </style>
+</head>
+<body>
+    <div class="hero"><h1>E-Katalog</h1><p>Modul & LKPD Informatika Fase E</p></div>
+    <div class="container" id="katalog"></div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbwnrFRTd787WIMq9bMBfX8M6jbYWsYmvDSYsGPN-KrEAW47lajpSA12WTK0OYSvTrQK/exec";
+        async function loadData() {
+            const res = await fetch(API_URL);
+            const data = await res.json();
+            const container = document.getElementById('katalog');
+            container.innerHTML = data.map(item => `
+                <a href="detail.html?id=${item.id}" class="card">
+                    <img src="${item.gambar}" alt="Cover">
+                    <div class="card-info">
+                        <h3>${item.judul}</h3>
+                        <span class="price">FREE</span>
+                    </div>
+                </a>
+            `).join('');
+        }
+        loadData();
+    </script>
+</body>
+</html>
