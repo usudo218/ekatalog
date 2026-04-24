@@ -2,64 +2,213 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Panel | E-Katalog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | E-Katalog Informatika</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #d32f2f; --dark: #1a1a1a; }
-        body { font-family: 'Inter', sans-serif; background: #f4f4f4; margin: 0; }
-        
-        header { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .logo { font-weight: 700; color: var(--primary); font-size: 1.2rem; text-decoration: none; }
-        
-        .container { max-width: 500px; margin: 50px auto; padding: 0 20px; }
-        .box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 6px; border: 1px solid #ddd; font-family: inherit; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; border-radius: 6px; border: none; background: var(--primary); color: white; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        button:hover { opacity: 0.9; }
-        
+        :root { 
+            --primary: #d32f2f; 
+            --dark: #1a1a1a; 
+            --gray: #f4f4f4; 
+            --white: #ffffff;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--gray); 
+            margin: 0; 
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- HEADER --- */
+        header { 
+            background: var(--white); 
+            padding: 15px 5%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+        }
+        .logo { 
+            font-weight: 700; 
+            color: var(--primary); 
+            font-size: 1.2rem; 
+            text-decoration: none; 
+            letter-spacing: 1px;
+        }
+
+        /* --- CONTAINER --- */
+        .container { 
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .box { 
+            background: var(--white); 
+            padding: 40px; 
+            border-radius: 15px; 
+            width: 100%; 
+            max-width: 450px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            box-sizing: border-box;
+        }
+
+        h2 { 
+            margin: 0 0 25px 0; 
+            text-align: center; 
+            color: var(--dark);
+            font-size: 1.5rem;
+        }
+
+        /* --- FORM ELEMENTS --- */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, textarea { 
+            width: 100%; 
+            padding: 12px 15px; 
+            margin-bottom: 20px; 
+            border-radius: 8px; 
+            border: 1px solid #ddd; 
+            font-family: inherit; 
+            font-size: 0.95rem;
+            box-sizing: border-box; 
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        button { 
+            width: 100%; 
+            padding: 14px; 
+            border-radius: 8px; 
+            border: none; 
+            background: var(--primary); 
+            color: white; 
+            font-weight: 700; 
+            font-size: 1rem;
+            cursor: pointer; 
+            transition: 0.3s; 
+        }
+
+        button:hover { 
+            background: #b71c1c;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         #panel { display: none; }
-        h2 { margin-top: 0; font-size: 1.4rem; text-align: center; margin-bottom: 25px; }
-        footer { text-align: center; padding: 30px; color: #888; font-size: 0.8rem; }
+
+        .btn-outline {
+            background: transparent;
+            color: #666;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+
+        .btn-outline:hover {
+            background: #f9f9f9;
+            color: var(--dark);
+        }
+
+        /* --- FOOTER --- */
+        footer { 
+            text-align: center; 
+            padding: 30px 20px; 
+            color: #888; 
+            font-size: 0.85rem; 
+            border-top: 1px solid #eee; 
+            background: var(--white); 
+        }
     </style>
 </head>
 <body>
 
     <header>
         <a href="index.html" class="logo">E-KATALOG ADMIN</a>
+        <a href="index.html" style="text-decoration:none; color:#666; font-size:0.85rem; font-weight:600;">Lihat Katalog</a>
     </header>
 
     <div class="container">
         <div id="login" class="box">
-            <h2>Login Admin</h2>
-            <input type="password" id="pass" placeholder="Password Admin">
-            <button onclick="doLogin()">MASUK KE PANEL</button>
+            <h2>Login Keamanan</h2>
+            <label for="pass">Password Admin</label>
+            <input type="password" id="pass" placeholder="Masukkan password...">
+            <button onclick="doLogin()" id="btnLogin">MASUK KE PANEL</button>
         </div>
 
         <div id="panel" class="box">
             <h2>Tambah Modul Baru</h2>
             <form id="addForm">
-                <input type="text" id="t" placeholder="Judul Modul" required>
-                <textarea id="d" placeholder="Deskripsi Modul" rows="4" required></textarea>
-                <input type="text" id="g" placeholder="Link Gambar Cover (Google Drive)" required>
-                <input type="text" id="f" placeholder="Link File PDF (Google Drive)" required>
-                <button type="submit" id="s">SIMPAN MODUL</button>
+                <label>Judul Modul</label>
+                <input type="text" id="t" placeholder="Contoh: Algoritma Pemrograman" required>
+                
+                <label>Deskripsi Singkat</label>
+                <textarea id="d" placeholder="Jelaskan isi modul ini..." rows="4" required></textarea>
+                
+                <label>Link Gambar Cover (Google Drive)</label>
+                <input type="text" id="g" placeholder="https://drive.google.com/file/d/..." required>
+                
+                <label>Link File PDF (Google Drive)</label>
+                <input type="text" id="f" placeholder="https://drive.google.com/file/d/..." required>
+                
+                <button type="submit" id="s">SIMPAN KE KATALOG</button>
             </form>
-            <button onclick="location.reload()" style="background:#666; margin-top:10px;">KELUAR</button>
+            <button onclick="location.reload()" class="btn-outline">LOGOUT</button>
         </div>
     </div>
 
-    <footer>&copy; 2026 Admin Panel E-Katalog.</footer>
+    <footer>&copy; 2026 E-Katalog Informatika..</footer>
 
     <script>
+        // MASUKKAN URL /exec BAPAK DI SINI
         const API_URL = "https://script.google.com/macros/s/AKfycbwnrFRTd787WIMq9bMBfX8M6jbYWsYmvDSYsGPN-KrEAW47lajpSA12WTK0OYSvTrQK/exec";
-        
-        function doLogin() {
-            if(document.getElementById('pass').value === "admin123") {
-                document.getElementById('login').style.display = 'none';
-                document.getElementById('panel').style.display = 'block';
-            } else { alert("Password Salah!"); }
+
+        async function doLogin() {
+            const passInput = document.getElementById('pass').value;
+            const btn = document.getElementById('btnLogin');
+            
+            if (!passInput) return alert("Isi password terlebih dahulu!");
+
+            btn.innerText = "Mengecek...";
+            btn.disabled = true;
+
+            try {
+                // Menghubungi Apps Script untuk verifikasi password
+                const res = await fetch(`${API_URL}?action=login&pass=${encodeURIComponent(passInput)}`);
+                const result = await res.json();
+
+                if (result.success) {
+                    document.getElementById('login').style.display = 'none';
+                    document.getElementById('panel').style.display = 'block';
+                } else {
+                    alert("Password Salah! Akses Ditolak.");
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Gagal terhubung ke server. Pastikan Deployment Apps Script sudah benar.");
+            } finally {
+                btn.innerText = "MASUK KE PANEL";
+                btn.disabled = false;
+            }
         }
 
         document.getElementById('addForm').onsubmit = async (e) => {
@@ -76,14 +225,31 @@
             };
             
             try {
-                await fetch(API_URL + "?action=add", { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
+                // Mengirim data ke Apps Script via POST
+                await fetch(API_URL, { 
+                    method: 'POST', 
+                    mode: 'no-cors', 
+                    body: JSON.stringify(data) 
+                });
+
+                // MEMBERSIHKAN CACHE: Agar data baru langsung muncul di index.html
+                sessionStorage.removeItem('katalogData');
+                
                 alert("Modul Berhasil Tersimpan!");
                 document.getElementById('addForm').reset();
-            } catch (err) { alert("Terjadi kesalahan!"); }
-            
-            btn.innerText = "SIMPAN MODUL";
-            btn.disabled = false;
+            } catch (err) { 
+                console.error(err);
+                alert("Terjadi kesalahan saat menyimpan."); 
+            } finally {
+                btn.innerText = "SIMPAN KE KATALOG";
+                btn.disabled = false;
+            }
         };
+
+        // Support Enter key untuk login
+        document.getElementById('pass').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') doLogin();
+        });
     </script>
 </body>
 </html>
