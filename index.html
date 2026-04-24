@@ -79,21 +79,18 @@
 
         // 2. Fungsi Konversi Link Drive yang Aman
         function fixDriveLink(url) {
-            try {
-                if (url && url.includes('drive.google.com')) {
-                    let id = "";
-                    if (url.includes('id=')) {
-                        id = url.split('id=')[1].split('&')[0];
-                    } else if (url.includes('/d/')) {
-                        id = url.split('/d/')[1].split('/')[0];
-                    }
-                    return id ? `https://drive.google.com/uc?export=view&id=${id}` : url;
-                }
-                return url;
-            } catch (e) {
-                return url; // Jika error balikkan url asli
-            }
+    if (url && url.includes('drive.google.com')) {
+        let id = "";
+        if (url.includes('/d/')) {
+            id = url.split('/d/')[1].split('/')[0];
+        } else if (url.includes('id=')) {
+            id = url.split('id=')[1].split('&')[0];
         }
+        // Menggunakan thumbnail link (lebih cepat loadingnya untuk katalog)
+        return `https://lh3.googleusercontent.com/d/${id}`;
+    }
+    return url;
+}
 
         async function loadData() {
             const container = document.getElementById('katalog-container');
