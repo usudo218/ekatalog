@@ -18,12 +18,22 @@
         .back-link { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #666; font-size: 0.9rem; }
 
         .content-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.05); display: flex; flex-wrap: wrap; }
-        .img-section { flex: 1; min-width: 300px; background: #eee; }
-        .img-section img { width: 100%; height: auto; display: block; }
         
+        /* Bagian Kiri: Gambar & Info Singkat */
+        .img-section { flex: 1; min-width: 320px; background: #fff; padding: 20px; border-right: 1px solid #eee; }
+        .img-section img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        
+        /* Kotak Info di Bawah Gambar */
+        .meta-info { background: #fdfdfd; padding: 15px; border-radius: 8px; border: 1px solid #eee; font-size: 0.9rem; }
+        .meta-info p { margin: 8px 0; color: #333; display: flex; justify-content: flex-start; border-bottom: 1px solid #f0f0f0; padding-bottom: 5px; }
+        .meta-info p:last-child { border-bottom: none; }
+        .meta-info strong { width: 100px; color: #666; font-weight: 600; }
+        .meta-info span { flex: 1; color: var(--dark); font-weight: 500; }
+
+        /* Bagian Kanan: Judul & Deskripsi */
         .info-section { flex: 1.5; padding: 40px; min-width: 300px; }
-        .info-section h1 { margin: 0 0 15px 0; font-size: 1.8rem; }
-        .info-section p { line-height: 1.8; color: #444; margin-bottom: 30px; white-space: pre-wrap; }
+        .info-section h1 { margin: 0 0 15px 0; font-size: 1.8rem; color: var(--dark); }
+        .info-section p.deskripsi { line-height: 1.8; color: #444; margin-bottom: 30px; white-space: pre-wrap; }
 
         .btn-group { display: flex; gap: 10px; }
         .btn { flex: 1; padding: 15px; border-radius: 8px; text-align: center; font-weight: 700; text-decoration: none; border: none; cursor: pointer; transition: 0.3s; font-size: 0.9rem; }
@@ -35,7 +45,11 @@
         
         footer { text-align: center; padding: 40px; color: #888; font-size: 0.85rem; }
 
-        @media (max-width: 600px) { .info-section { padding: 25px; } .info-section h1 { font-size: 1.4rem; } }
+        @media (max-width: 600px) { 
+            .img-section { border-right: none; border-bottom: 1px solid #eee; }
+            .info-section { padding: 25px; } 
+            .info-section h1 { font-size: 1.4rem; } 
+        }
     </style>
 </head>
 <body>
@@ -47,17 +61,28 @@
 
     <div class="container">
         <a href="index.html" class="back-link">← Kembali ke Katalog</a>
+        
         <div class="content-card">
-            <div class="img-section"><img id="gbr" src=""></div>
+            <div class="img-section">
+                <img id="gbr" src="" alt="Cover Modul">
+                <div class="meta-info">
+                    <p><strong>Judul:</strong> <span id="meta-judul">-</span></p>
+                    <p><strong>Pengarang:</strong> <span id="meta-pengarang">-</span></p>
+                    <p><strong>Tahun:</strong> <span id="meta-tahun">-</span></p>
+                </div>
+            </div>
+
             <div class="info-section">
                 <h1 id="jdl">Memuat...</h1>
-                <p id="dsk">...</p>
+                <p id="dsk" class="deskripsi">...</p>
+                
                 <div class="btn-group">
                     <button class="btn btn-read" onclick="showPdf()">BACA ONLINE</button>
                     <a id="down" href="#" class="btn btn-down" target="_blank">DOWNLOAD PDF</a>
                 </div>
             </div>
         </div>
+        
         <iframe id="pdf-viewer"></iframe>
     </div>
 
@@ -76,21 +101,42 @@
         }
 
         async function loadDetail() {
-            const res = await fetch(API_URL);
-            const data = await res.json();
-            const item = data.find(x => x.id === id);
-            if (item) {
-                document.getElementById('jdl').innerText = item.judul;
-                document.getElementById('dsk').innerText = item.deskripsi;
-                document.getElementById('gbr').src = fixDriveLink(item.gambar, 'img');
-                document.getElementById('down').href = fixDriveLink(item.filepdf, 'down');
-                document.getElementById('pdf-viewer').src = fixDriveLink(item.filepdf, 'pdf');
+            try {
+                // Menambahkan timestamp agar browser tidak mengambil cache lama
+                const res = await fetch(API_URL + "?t=" + new Date().getTime());
+                const data = await res.json();
+                const item = data.find(x => x.id === id);
+                
+                if (item) {
+                    // Isi Judul Utama & Identitas Modul
+                    document.getElementById('jdl').innerText = item.judul;
+                    document.getElementById('meta-judul').innerText = item.judul;
+                    
+                    // Pastikan nama properti 'pengarang' dan 'tahun' sesuai dengan yang dikirim Apps Script Anda
+                    document.getElementById('meta-pengarang').innerText = item.pengarang || "-";
+                    document.getElementById('meta-tahun').innerText = item.tahun || "-";
+                    
+                    document.getElementById('dsk').innerText = item.deskripsi;
+                    document.getElementById('gbr').src = fixDriveLink(item.gambar, 'img');
+                    document.getElementById('down').href = fixDriveLink(item.filepdf, 'down');
+                    document.getElementById('pdf-viewer').src = fixDriveLink(item.filepdf, 'pdf');
+                } else {
+                    document.getElementById('jdl').innerText = "Data tidak ditemukan";
+                }
+            } catch (err) {
+                console.error("Gagal memuat data:", err);
+                document.getElementById('jdl').innerText = "Kesalahan Koneksi";
             }
         }
+
         function showPdf() { 
             document.getElementById('pdf-viewer').style.display = 'block'; 
-            window.scrollTo({ top: document.getElementById('pdf-viewer').offsetTop - 100, behavior: 'smooth' });
+            window.scrollTo({ 
+                top: document.getElementById('pdf-viewer').offsetTop - 100, 
+                behavior: 'smooth' 
+            });
         }
+
         loadDetail();
     </script>
 </body>
