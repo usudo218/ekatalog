@@ -53,7 +53,7 @@
             padding: 40px; 
             border-radius: 15px; 
             width: 100%; 
-            max-width: 450px; 
+            max-width: 500px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
             box-sizing: border-box;
         }
@@ -77,7 +77,7 @@
         input, textarea { 
             width: 100%; 
             padding: 12px 15px; 
-            margin-bottom: 20px; 
+            margin-bottom: 15px; 
             border-radius: 8px; 
             border: 1px solid #ddd; 
             font-family: inherit; 
@@ -161,6 +161,12 @@
                 <label>Judul Modul</label>
                 <input type="text" id="t" placeholder="Contoh: Algoritma Pemrograman" required>
                 
+                <label>Pengarang</label>
+                <input type="text" id="p" placeholder="Nama Penulis/Pengarang" required>
+
+                <label>Tahun Terbit</label>
+                <input type="number" id="y" placeholder="Contoh: 2024" required>
+
                 <label>Deskripsi Singkat</label>
                 <textarea id="d" placeholder="Jelaskan isi modul ini..." rows="4" required></textarea>
                 
@@ -176,10 +182,9 @@
         </div>
     </div>
 
-    <footer>&copy; 2026 E-Katalog Informatika..</footer>
+    <footer>&copy; 2026 E-Katalog Informatika.</footer>
 
     <script>
-        // MASUKKAN URL /exec BAPAK DI SINI
         const API_URL = "https://script.google.com/macros/s/AKfycbztLy4HzsfvGcrfh0-Gy63ZzYq7I-vfUMLebMmC-LN-5IN6SdstvuypF8fyNFKfbnx5/exec";
 
         async function doLogin() {
@@ -192,7 +197,6 @@
             btn.disabled = true;
 
             try {
-                // Menghubungi Apps Script untuk verifikasi password
                 const res = await fetch(`${API_URL}?action=login&pass=${encodeURIComponent(passInput)}`);
                 const result = await res.json();
 
@@ -219,6 +223,8 @@
 
             const data = { 
                 judul: document.getElementById('t').value, 
+                pengarang: document.getElementById('p').value,
+                tahun: document.getElementById('y').value,
                 deskripsi: document.getElementById('d').value, 
                 gambar: document.getElementById('g').value, 
                 filepdf: document.getElementById('f').value 
@@ -232,7 +238,6 @@
                     body: JSON.stringify(data) 
                 });
 
-                // MEMBERSIHKAN CACHE: Agar data baru langsung muncul di index.html
                 sessionStorage.removeItem('katalogData');
                 
                 alert("Modul Berhasil Tersimpan!");
@@ -246,7 +251,6 @@
             }
         };
 
-        // Support Enter key untuk login
         document.getElementById('pass').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') doLogin();
         });
