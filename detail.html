@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail Modul</title>
+    <style>
+        body { font-family: sans-serif; background: #fce4ec; padding: 20px; }
+        .box { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
+        .flex { display: flex; gap: 20px; flex-wrap: wrap; }
+        img { width: 250px; border-radius: 8px; }
+        .btn { padding: 10px 20px; color: white; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px; }
+        .btn-read { background: #007bff; }
+        .btn-down { background: #28a745; }
+        iframe { width: 100%; height: 500px; margin-top: 20px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <a href="index.html">⬅ Kembali</a>
+        <div class="flex">
+            <img id="gbr" src="">
+            <div>
+                <h1 id="jdl">Memuat...</h1>
+                <p id="desk"></p>
+                <button onclick="baca()" class="btn btn-read">Baca Online</button>
+                <a id="linkD" href="#" download class="btn btn-down">Download PDF</a>
+            </div>
+        </div>
+        <iframe id="viewer" src=""></iframe>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbwnrFRTd787WIMq9bMBfX8M6jbYWsYmvDSYsGPN-KrEAW47lajpSA12WTK0OYSvTrQK/exec";
+        const id = new URLSearchParams(window.location.search).get('id');
+
+        async function getDetail() {
+            const res = await fetch(API_URL);
+            const data = await res.json();
+            const item = data.find(x => x.id == id);
+            if(item) {
+                document.getElementById('jdl').innerText = item.judul;
+                document.getElementById('desk').innerText = item.deskripsi;
+                document.getElementById('gbr').src = item.gambar;
+                document.getElementById('linkD').href = item.filepdf;
+                document.getElementById('viewer').src = item.filepdf;
+            }
+        }
+        function baca() { document.getElementById('viewer').style.display = 'block'; }
+        getDetail();
+    </script>
+</body>
+</html>
