@@ -2,51 +2,51 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Panel</title>
+    <title>Admin Panel | E-Katalog</title>
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; padding: 40px; background: #eee; }
-        .form-box { background: white; padding: 25px; border-radius: 8px; width: 400px; }
-        input, textarea, button { width: 100%; margin-bottom: 15px; padding: 10px; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box; }
-        button { background: #d32f2f; color: white; cursor: pointer; font-weight: bold; border: none; }
+        body { font-family: sans-serif; background: #f4f4f4; display: flex; justify-content: center; padding: 40px; }
+        .box { background: white; padding: 30px; border-radius: 10px; width: 100%; max-width: 450px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        input, textarea, button { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ddd; box-sizing: border-box; }
+        button { background: #d32f2f; color: white; font-weight: bold; border: none; cursor: pointer; }
         #panel { display: none; }
     </style>
 </head>
 <body>
-    <div id="login" class="form-box">
+    <div id="login" class="box">
         <h2>Login Admin</h2>
-        <input type="password" id="pass" placeholder="Password">
-        <button onclick="login()">Masuk</button>
+        <input type="password" id="pass" placeholder="Password Admin">
+        <button onclick="doLogin()">Masuk</button>
     </div>
 
-    <div id="panel" class="form-box">
-        <h2>Tambah Data</h2>
+    <div id="panel" class="box">
+        <h2>Tambah Modul Baru</h2>
         <form id="addForm">
-            <input type="text" id="t" placeholder="Judul" required>
-            <textarea id="d" placeholder="Deskripsi"></textarea>
-            <input type="text" id="g" placeholder="Link URL Gambar" required>
-            <input type="text" id="f" placeholder="Link URL PDF" required>
-            <button type="submit" id="s">Simpan Data</button>
+            <input type="text" id="t" placeholder="Judul Modul" required>
+            <textarea id="d" placeholder="Deskripsi Singkat" rows="3"></textarea>
+            <input type="text" id="g" placeholder="Link Gambar Drive" required>
+            <input type="text" id="f" placeholder="Link PDF Drive" required>
+            <button type="submit" id="s">Simpan ke Katalog</button>
         </form>
-        <button onclick="location.reload()" style="background:#666">Logout</button>
+        <button onclick="location.reload()" style="background:#666">Keluar</button>
     </div>
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwnrFRTd787WIMq9bMBfX8M6jbYWsYmvDSYsGPN-KrEAW47lajpSA12WTK0OYSvTrQK/exec";
-        function login() {
-            if(document.getElementById('pass').value === "admin123") { // Ganti password di sini
+        function doLogin() {
+            if(document.getElementById('pass').value === "admin123") { // Ganti Password Anda
                 document.getElementById('login').style.display = 'none';
                 document.getElementById('panel').style.display = 'block';
-            } else { alert("Salah!"); }
+            } else { alert("Password Salah!"); }
         }
 
         document.getElementById('addForm').onsubmit = async (e) => {
             e.preventDefault();
             document.getElementById('s').innerText = "Menyimpan...";
-            const data = { judul: document.getElementById('t').value, deskripsi: document.getElementById('d').value,
+            const data = { judul: document.getElementById('t').value, deskripsi: document.getElementById('d').value, 
                            gambar: document.getElementById('g').value, filepdf: document.getElementById('f').value };
             
             await fetch(API_URL + "?action=add", { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
-            alert("Berhasil!");
+            alert("Data Berhasil Disimpan!");
             location.reload();
         };
     </script>
