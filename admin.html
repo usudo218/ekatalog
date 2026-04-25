@@ -63,6 +63,7 @@
             margin: 0 auto;
             width: 100%;
             box-sizing: border-box;
+            flex: 1; /* Menekan footer ke bawah */
         }
 
         .box { 
@@ -124,6 +125,21 @@
 
         #panel { display: none; }
         #loader-list { text-align: center; color: #999; padding: 20px; }
+
+        /* --- FOOTER FIXED --- */
+        footer { 
+            text-align: center; 
+            padding: 30px 20px; 
+            color: #888; 
+            font-size: 0.85rem; 
+            border-top: 1px solid #eee; 
+            background: var(--white);
+            display: flex;
+            justify-content: center; 
+            align-items: center; 
+            width: 100%; 
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -176,22 +192,8 @@
             <button onclick="location.reload()" style="background:#444; margin-top:30px;">KELUAR / LOGOUT</button>
         </div>
     </div>
-footer { 
-    text-align: center; /* Memastikan teks rata tengah */
-    padding: 30px 20px; 
-    color: #888; 
-    font-size: 0.85rem; 
-    border-top: 1px solid #eee; 
-    background: var(--white);
-    
-    /* Tambahkan ini jika footer masih membandel */
-    display: flex;
-    justify-content: center; /* Rata tengah horizontal */
-    align-items: center;     /* Rata tengah vertikal */
-    width: 100%;             /* Memastikan selebar layar */
-    box-sizing: border-box;
-}
-    <footer>&copy; 2026 Admin Panel Informatika.</footer>
+
+    <footer>&copy; 2026 Admin Panel Informatika Pak Cokro.</footer>
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbx4BOkoJcUkv0mHwTXIpXGWG1rqrLTifR5nY9GOv_-AmUxUu3V3GNG3ZjAtzDkuVf0m/exec";
